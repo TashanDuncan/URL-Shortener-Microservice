@@ -48,8 +48,15 @@ app.get('/api/hello', function (req, res) {
 });
 
 app.post('/api/shorturl', function (req, res) {
+
+  const {url: reqUrl} = req.body;
+
+  const validUrl = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/
+  if(!validUrl.test(reqUrl)){
+    return res.json({error: 'invalid url'})
+  }
   let newUrl = new Url({
-    original_url: req.body.url
+    original_url: reqUrl
   })
   newUrl.save((err, data) =>{
     if (err) return console.error(err);
